@@ -4,4 +4,6 @@ export interface Node {
   content: string;
   xPos: number;
   yPos: number;
+  width: number;
+  height: number;
 }

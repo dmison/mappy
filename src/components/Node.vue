@@ -1,9 +1,7 @@
 <template>
-  <div class="node" @mousedown="startDrag"
-       :style="{ top: `${yPos-120}px`, left: `${xPos-20}px`}">
-    <h1>{{title}}</h1>
-    <p>{{content}}</p>
-    {{xPos}}, {{yPos}}
+  <div  @mousedown="startDrag"
+        :style="{ top: `${yPos}px`, left: `${xPos}px`, width: `${width}px`, height: `${height}px`}">
+    <slot name="default" />
   </div>
 </template>
 
@@ -14,14 +12,14 @@ export default defineComponent({
   name: 'Node',
   props: {
     id: { type: String, required: true },
-    title: { type: String, required: true },
-    content: { type: String, required: true },
     xPos: { type: Number, required: true },
-    yPos: { type: Number, required: true }
+    yPos: { type: Number, required: true },
+    height: { type: Number, required: true },
+    width: { type: Number, required: true }
   },
   setup (props, { emit }) {
     function startDrag () {
-      emit('startDrag', props.id)
+      emit('startDrag')
     }
     return {
       startDrag
@@ -31,16 +29,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-h1
-  font-size: 18px
-  font-weight: bold
-  background-color: grey
-  margin: 0
-  padding: 2px
-.node
-  margin: 0
-  border: 1px solid black
+div
   position: absolute
-  width: 70px
-  height: 100px
+  overflow-x: scroll
 </style>
