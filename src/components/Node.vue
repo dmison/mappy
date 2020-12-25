@@ -1,8 +1,5 @@
 <template>
-  <div class="node"
-       @mousemove="move"
-       @mousedown="startDrag"
-       @mouseup="endDrag"
+  <div class="node" @mousedown="startDrag"
        :style="{ top: `${yPos-120}px`, left: `${xPos-20}px`}">
     <h1>{{title}}</h1>
     <p>{{content}}</p>
@@ -26,16 +23,8 @@ export default defineComponent({
     function startDrag () {
       emit('startDrag', props.id)
     }
-    function endDrag () {
-      emit('endDrag', props.id)
-    }
-    function move (event: any) {
-      emit('move', props.id, event.movementX, event.movementY)
-    }
     return {
-      move,
-      startDrag,
-      endDrag
+      startDrag
     }
   }
 })

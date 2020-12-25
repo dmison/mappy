@@ -1,5 +1,5 @@
 <template>
-  <div class="canvas" ref="root">
+  <div class="canvas" ref="root" @mouseup="endDrag" @mousemove="move" >
     <Node
       v-for="node in nodes" :key="node.id"
       :id="node.id"
@@ -8,8 +8,7 @@
       :x-pos="node.xPos"
       :y-pos="node.yPos"
       @startDrag="startDrag"
-      @endDrag="endDrag"
-      @move="moveIfDragging"
+
     />
 
   </div>
@@ -29,42 +28,44 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup: function (props) {
     const dragging = ref(false)
-    const draggedNodeId = ref('')
+    const draggedNode = ref<NodeType | null>(null)
     const root = ref(null)
+
     function startDrag (id: string) {
-      draggedNodeId.value = id
-      dragging.value = true
+      const node = props.nodes.find(node => node.id === id)
+
+      if (node) {
+        draggedNode.value = node
+        dragging.value = true
+      }
     }
+
     onMounted(() => {
       console.log(root)
-      //       offsetHeight: 434
-      // offsetLeft: 8
-      // offsetParent: body
-      // offsetTop: 112
-      // offsetWidth: 1624
+      // offsetHeight: 434// offsetLeft: 8// offsetParent: body// offsetTop: 112// offsetWidth: 1624
     })
     onUpdated(() => {
-      console.log(root)
+      // console.log(root)
     })
 
     function endDrag () {
-      draggedNodeId.value = ''
+      draggedNode.value = null
       dragging.value = false
     }
-    function moveIfDragging (id: string, moveX: number, moveY: number) {
-      if (dragging.value) {
-        const draggedNode = props.nodes.find((node): boolean => node.id === draggedNodeId.value)
-        if (draggedNode) {
-          draggedNode.xPos += moveX
-          draggedNode.yPos += moveY
-        }
+
+    function move ({ movementX, movementY }: { movementX: number; movementY: number }) {
+      if (draggedNode.value !== null) {
+        draggedNode.value.xPos += movementX
+        draggedNode.value.yPos += movementY
       }
     }
+
     return {
       dragging,
-      moveIfDragging,
+      draggedNode,
+      move,
       startDrag,
       endDrag,
       root
